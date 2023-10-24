@@ -1,0 +1,25 @@
+{
+  "name": "openmina-transaction-generator",
+  "version": "1.0.0",
+  "description": "A NodeJS CLI that sends transactions in the Mina network.",
+  "main": "main.ts",
+  "scripts": {
+    "build": "npx tsc",
+    "start": "npm run build && node dist/main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Teofil Jolte",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@types/node": "^20.8.8",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "boxen": "4.0",
+    "chalk": "2.4",
+    "graphql-request": "^6.1.0",
+    "mina-signer": "^2.1.1",
+    "node-fetch": "^3.3.2",
+    "yargs": "13.2"
+  }
+}
