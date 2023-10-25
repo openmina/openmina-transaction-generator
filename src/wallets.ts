@@ -1,4 +1,6 @@
-const WALLETS: { publicKey: string, privateKey: string }[] = [
+import { BaseWallet } from './types';
+
+const WALLETS: BaseWallet[] = [
 	{
 		publicKey: 'B62qrztYfPinaKqpXaYGY6QJ3SSW2NNKs7SajBLF1iFNXW9BoALN2Aq',
 		privateKey: 'EKEEpMELfQkMbJDt2fB4cFXKwSf1x4t7YD4twREy5yuJ84HBZtF9',

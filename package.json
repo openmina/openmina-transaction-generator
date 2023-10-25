@@ -4,9 +4,10 @@
   "description": "A NodeJS CLI that sends transactions in the Mina network.",
   "main": "main.ts",
   "scripts": {
-    "build": "npx tsc",
+    "build": "npx tsc && npm run cp-files",
     "start": "npm run build && node dist/main.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "cp-files": "cp setup.json dist/"
   },
   "author": "Teofil Jolte",
   "license": "Apache-2.0",
@@ -17,9 +18,7 @@
   "dependencies": {
     "boxen": "4.0",
     "chalk": "2.4",
-    "graphql-request": "^6.1.0",
     "mina-signer": "^2.1.1",
-    "node-fetch": "^3.3.2",
     "yargs": "13.2"
   }
 }

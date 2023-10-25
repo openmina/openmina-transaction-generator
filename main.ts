@@ -1,43 +1,48 @@
-import { getAccounts, getMempoolTransactions, sendTransaction } from './tx-service';
-import { BenchmarksMempoolTx, BenchmarksWallet, BenchmarksWalletTransaction } from './types';
-import Helper from './helper';
-import setup from './setup';
-
-const chalk = require('chalk');
-const boxen = require('boxen');
+import readSetup from './src/setup';
+import { MempoolTx, Setup, Transaction, Wallet } from './src/types';
+import { getAccounts, getMempoolTransactions, sendTransaction } from './src/tx-service';
+import Helper from './src/helper';
+import chalk, { Chalk } from 'chalk';
+import boxen, { BorderStyle } from 'boxen';
 
 async function run() {
-	console.log('Running...');
-	let sendFromRandomWallet: boolean = true;
-	let wallets: BenchmarksWallet[] = await getAccounts();
-	console.log('Retrieved wallets');
-	const mempoolTxs: BenchmarksMempoolTx[] = await getMempoolTransactions();
-	console.log('Retrieved mempool transactions');
-	wallets = wallets.map(wallet => {
+	console.log(chalk.blue('🚀 Running...\n'));
+
+	const setup: Setup = await readSetup();
+	console.log(chalk.green('⚙️ Configuration found\n'));
+
+	let wallets: Wallet[] = await getAccounts();
+	console.log(chalk.green('💼 Retrieved wallets\n'));
+
+	const mempoolTxs: MempoolTx[] = await getMempoolTransactions();
+	console.log(chalk.green('📊 Retrieved mempool transactions\n'));
+
+	/*wallets = wallets.map(wallet => {
 		const txsInMempool = mempoolTxs.filter(tx => tx.from === wallet.publicKey).map(tx => tx.nonce);
 		const mempoolNonce = txsInMempool.length ? Math.max(...txsInMempool) : undefined;
 		return ({ ...wallet, mempoolNonce });
-	});
+	});*/
 	let sentTxCount = 0;
 	let successTxCount = 0;
 	let failedTxCount = 0;
-	let sendingFee = 1;
-	let txsToSend: BenchmarksWalletTransaction[] = [];
+	let txsToSend: Transaction[] = [];
+	let sendFromRandomWallet: boolean = true;
 
 	if (sendFromRandomWallet) {
-		console.log('Preparing ' + setup.transactionsToSend + ' transactions to send');
+		console.log(chalk.green(`🛠 ️Preparing ${setup.transactionsToSend} transactions to send\n`));
 		txsToSend = wallets
 			.slice(0, setup.transactionsToSend)
-			.map((wallet: BenchmarksWallet, i: number) => {
+			.map((wallet: Wallet, i: number) => {
+				sentTxCount++;
 				const nonce = Helper.getNonceForWallet(wallet, mempoolTxs).toString();
 				const counter = sentTxCount + i;
-				const memo = Date.now() + ',' + (counter + 1);
+				const memo = `${Date.now()},${counter}`;
 				const payment = {
 					from: wallet.publicKey,
 					nonce,
 					to: Helper.getRandomReceiver(wallet, wallets),
-					fee: (sendingFee * 1e9).toString(),
-					amount: '2000000000',
+					fee: setup.transactionFee.toString(),
+					amount: setup.transactionAmount.toString(),
 					memo,
 					validUntil: '4294967295',
 				};
@@ -49,8 +54,8 @@ async function run() {
 			});
 	}
 
-	console.log('Sending ' + txsToSend.length + ' transactions');
-	for (const tx of txsToSend.slice(0, 5)) {
+	console.log(chalk.green(`📤 Sending ${txsToSend.length} transactions\n`));
+	for (const tx of txsToSend) {
 		await sendTransaction(tx).then((response: any) => {
 			if (response.error) {
 				failedTxCount++;
@@ -60,29 +65,28 @@ async function run() {
 		});
 	}
 
-	const boxenOptions = {
+	const boxenOptions: boxen.Options = {
 		padding: 1,
 		margin: 1,
-		borderStyle: 'round',
+		borderStyle: BorderStyle.Classic,
 		borderColor: 'green',
-		backgroundColor: '#555555',
+		backgroundColor: '#111',
 	};
 
-	const successStyle = chalk.green.bold.underline;
-	const failedStyle = chalk.red.bold.underline;
-	const urlStyle = chalk.blue.underline.bold;
+	const successStyle: Chalk = chalk.green.bold.underline;
+	const failedStyle: Chalk = chalk.red.bold.underline;
+	const urlStyle: Chalk = chalk.cyan.underline.bold;
 
-	let port = setup.port ? `:${setup.port}` : '';
-	const logMessage = [
+	const port: string = setup.port ? `:${setup.port}` : '';
+	const operationsStatistics: string = [
 		successStyle(`Success: ${successTxCount} transactions\n\n`),
 		failedStyle(`Failed: ${failedTxCount} transactions\n\n`),
 		'Check the transactions at:\n',
-		urlStyle(`${setup.url}${port}/explorer/transactions?node=${setup.activeNodeName}`),
+		urlStyle(`${setup.domain}${port}/explorer/transactions`),
 	].join('');
 
-	const msgBox = boxen(logMessage, boxenOptions);
-	console.log(msgBox);
+	const statsBox = boxen(operationsStatistics, boxenOptions);
+	console.log(statsBox);
 }
 
 run();
-

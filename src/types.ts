@@ -1,15 +1,21 @@
-export interface OpenminaTransactionGeneratorSetup {
-	url: string;
+export interface Setup {
+	domain: string;
 	port: number | null | undefined;
-	activeNodeName: string;
+	activeNodeName: string; // ex: 'prod1'
 	network: 'testnet' | 'mainnet';
-	otherNodes: string[];
+	allNodes: string[];
+	sendToRandomNodes: boolean; // if false, send to activeNodeName only
 	transactionsToSend: number;
+	transactionAmount: number;
+	transactionFee: number;
 }
 
-export interface BenchmarksWallet {
+export interface BaseWallet {
 	publicKey: string;
 	privateKey: string;
+}
+
+export interface Wallet extends BaseWallet {
 	minaTokens: number;
 	nonce: number;
 	mempoolNonce?: number;
@@ -21,14 +27,14 @@ export interface BenchmarksWallet {
 	errorReason?: string;
 }
 
-export interface BenchmarksMempoolTx {
+export interface MempoolTx {
 	from: string;
 	nonce: number;
 	memo: string;
 	dateTime: string;
 }
 
-export interface BenchmarksWalletTransaction {
+export interface Transaction {
 	amount: string;
 	fee: string;
 	memo: string;
