@@ -1,0 +1,17 @@
+apiVersion: batch/v1
+metadata:
+  name: {{ include "mina-transaction-generator.fullname" . }}
+  labels:
+    {{- include "mina-transaction-generator.labels" . | nindent 4 }}
+{{ if .Values.schedule }}
+kind: CronJob
+spec:
+  schedule: {{ .Values.schedule | quote}}
+  jobTemplate:
+    spec:
+      {{ include "mina-transaction-generator.jobSpec" . | indent 6 }}
+{{ else }}
+kind: Job
+spec:
+  {{ include "mina-transaction-generator.jobSpec" . | indent 2 }}
+{{ end }}

@@ -1,20 +1,7 @@
-# Use an official Node.js runtime as a parent image
-FROM node:18
+FROM node:alpine
 
-# Set the working directory in the container
-WORKDIR /app
-
-# Copy package.json and package-lock.json to the container
-COPY package*.json ./
-
-# Install app dependencies
-RUN npm install
-
-# Copy the rest of the application code to the container
+WORKDIR /mina-transactions-generator
 COPY . .
-
-# Build the application
+RUN npm install
 RUN npm run build
 
-# Start the application
-CMD ["node", "dist/main.js"]
