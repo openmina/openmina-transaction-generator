@@ -56,13 +56,17 @@ async function run() {
 
 	console.log(chalk.green(`📤 Sending ${txsToSend.length} transactions\n`));
 	for (const tx of txsToSend) {
-		await sendTransaction(tx).then((response: any) => {
-			if (response.error) {
-				failedTxCount++;
-			} else {
-				successTxCount++;
-			}
-		});
+		try {
+			await sendTransaction(tx).then((response: any) => {
+				if (response.error) {
+					failedTxCount++;
+				} else {
+					successTxCount++;
+				}
+			});
+		} catch (e) {
+
+		}
 	}
 
 	const boxenOptions: boxen.Options = {

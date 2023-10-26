@@ -4,7 +4,7 @@
   "activeNodeName": "snarker020",
   "network": "testnet",
   "sendToRandomNodes": false,
-  "transactionsToSend": 50,
+  "transactionsToSend": 200,
   "transactionFee": 1000000000,
   "transactionAmount": 2000000000,
   "allNodes": [
