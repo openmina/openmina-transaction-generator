@@ -3,10 +3,10 @@
   "port": 31754,
   "activeNodeName": "snarker020",
   "network": "testnet",
-  "sendToRandomNodes": false,
+  "sendToAllNodes": false,
   "transactionsToSend": 200,
-  "transactionFee": 1000000000,
-  "transactionAmount": 2000000000,
+  "transactionFee": 100000000,
+  "transactionAmount": 100000000,
   "allNodes": [
     "prod1",
     "prod10",

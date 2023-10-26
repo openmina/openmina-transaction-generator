@@ -15,14 +15,6 @@ class Helper {
 		return Math.max(wallet.nonce, mempoolNonce);
 	}
 
-	static getTargetNodeName(setup: Setup): string {
-		if (setup.sendToRandomNodes) {
-			return setup.allNodes[Math.floor(Math.random() * setup.allNodes.length)];
-		} else {
-			return setup.activeNodeName;
-		}
-	}
-
 	static sendTxGraphQLMutationBody(): string {
 		return `
     ($fee: UInt64!, $amount: UInt64!,

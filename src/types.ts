@@ -4,7 +4,7 @@ export interface Setup {
 	activeNodeName: string; // ex: 'prod1'
 	network: 'testnet' | 'mainnet';
 	allNodes: string[];
-	sendToRandomNodes: boolean; // if false, send to activeNodeName only
+	sendToAllNodes: boolean; // if false, send to activeNodeName only, otherwise send to allNodes 1 by 1 until transactionsToSend is reached
 	transactionsToSend: number;
 	transactionAmount: number;
 	transactionFee: number;

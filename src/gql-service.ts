@@ -1,11 +1,12 @@
 import { Setup } from './types';
 import readSetup from './setup';
 import { RequestOptions } from 'http';
-import Helper from './helper';
 import http from 'http';
+import chalk from 'chalk';
 
 async function makeGraphQLRequest(
 	operationType: 'query' | 'mutation',
+	nodeName: string,
 	operationName: string,
 	query: string,
 	variables?: any,
@@ -16,7 +17,7 @@ async function makeGraphQLRequest(
 	const options: RequestOptions = {
 		hostname: setup.domain,
 		port: setup.port,
-		path: '/' + Helper.getTargetNodeName(setup) + '/graphql',
+		path: (nodeName ? ('/' + nodeName) : '') + '/graphql',
 		method: 'POST',
 		headers: {
 			'Accept': 'application/json',
@@ -38,14 +39,20 @@ async function makeGraphQLRequest(
 			});
 
 			res.on('end', () => {
-				const response = JSON.parse(data);
+				let response ;
+				try {
+					 response = JSON.parse(data);
+				} catch (e) {
+					console.error(chalk.red('❌  GraphQL response is not a valid JSON: ' + e));
+					reject(e);
+				}
 				if (res.statusCode === 200 && !response.errors) {
 					resolve(response.data);
 				} else {
 					if (res.statusCode === 200) {
-						console.error('❌  GraphQL request failed with error:', response.errors[0].message);
+						console.error(chalk.red('❌  GraphQL request failed with error:', response.errors[0].message));
 					} else {
-						console.error('❌  GraphQL request failed with status code:', res.statusCode);
+						console.error(chalk.red('❌  GraphQL request failed with status code:', res.statusCode));
 					}
 					reject(response);
 				}
@@ -53,7 +60,7 @@ async function makeGraphQLRequest(
 		});
 
 		req.on('error', (error: any) => {
-			console.error('❌  GraphQL Request Error:', error);
+			console.error(chalk.red('❌  GraphQL Request Error:', error));
 			reject(error);
 		});
 
@@ -62,10 +69,10 @@ async function makeGraphQLRequest(
 	});
 }
 
-export async function makeGraphQLQuery(queryName: string, query: string, variables?: any): Promise<any> {
-	return makeGraphQLRequest('query', queryName, query, variables);
+export async function makeGraphQLQuery(nodeName: string, queryName: string, query: string, variables?: any): Promise<any> {
+	return makeGraphQLRequest('query', nodeName, queryName, query, variables);
 }
 
-export async function makeGraphQLMutation(mutationName: string, query: string, variables?: any): Promise<any> {
-	return makeGraphQLRequest('mutation', mutationName, query, variables);
+export async function makeGraphQLMutation(nodeName: string, mutationName: string, query: string, variables?: any): Promise<any> {
+	return makeGraphQLRequest('mutation', nodeName, mutationName, query, variables);
 }

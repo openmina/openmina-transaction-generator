@@ -30,7 +30,7 @@ Explaining each field:
  - `port` is the port of the server where you want to send the transactions
  - `network` is the network name. Available options are `mainnet` or `testnet`
  - `activeNodeName` is the name of the node that you want to send the transactions
- - `sendToRandomNodes` is a boolean that indicates if you want to send the transactions to random nodes or to the active node
+ - `sendToAllNodes` is a boolean that indicates if you want to send the transactions to all nodes 1 by 1 or, if false, all to the active node
  - `transactionsToSend` is the number of transactions that you want to send
  - `transactionFee` is the fee that you want to pay for each transaction **(in micromina)**
  - `transactionAmount` is the amount that you want to send for each transaction **(in micromina)**

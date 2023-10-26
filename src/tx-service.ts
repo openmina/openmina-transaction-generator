@@ -7,12 +7,15 @@ import Helper from './helper';
 
 let client: Client;
 
-export async function getAccounts(): Promise<Wallet[]> {
+export async function getAccounts(nodeName: string): Promise<Wallet[]> {
 	let query = '{';
 	WALLETS.forEach((wallet: BaseWallet, i: number) => query += `account${i}: account(publicKey: "${wallet.publicKey}") { nonce balance { liquid } }, `);
 	query += '}';
 
-	return makeGraphQLQuery('getAccounts', query).then((response: any) => {
+	return makeGraphQLQuery(nodeName, 'getAccounts', query).then((response: any) => {
+		if (response.account0 === null) {
+			throw new Error('No accounts found in the node ' + nodeName + '. Try again later.');
+		}
 		return Object.keys(response).map((key: any, i: number) => ({
 			...WALLETS[i],
 			minaTokens: Number(response[`account${i}`].balance.liquid) / 1000000,
@@ -23,8 +26,8 @@ export async function getAccounts(): Promise<Wallet[]> {
 	});
 }
 
-export async function getMempoolTransactions(): Promise<MempoolTx[]> {
-	return makeGraphQLQuery('getMempoolTransactions', '{ pooledUserCommands { ... on UserCommandPayment { nonce from } } }')
+export async function getMempoolTransactions(nodeName: string): Promise<MempoolTx[]> {
+	return makeGraphQLQuery(nodeName, 'getMempoolTransactions', '{ pooledUserCommands { ... on UserCommandPayment { nonce from } } }')
 		.then(
 			(response: any) => response.pooledUserCommands.map((tx: any) => ({
 				from: tx.from,
@@ -35,7 +38,7 @@ export async function getMempoolTransactions(): Promise<MempoolTx[]> {
 		);
 }
 
-export async function sendTransaction(transaction: Transaction): Promise<Transaction | { error: Error }> {
+export async function sendTransaction(nodeName: string, transaction: Transaction): Promise<Transaction | { error: Error }> {
 	const client = await getClient();
 	const signedPayment = client.signPayment(transaction, transaction.privateKey);
 	const signedTx = {
@@ -45,7 +48,7 @@ export async function sendTransaction(transaction: Transaction): Promise<Transac
 	};
 
 	const txBody: string = Helper.sendTxGraphQLMutationBody();
-	return makeGraphQLMutation('sendTx', txBody, signedTx).then(
+	return makeGraphQLMutation(nodeName, 'sendTx', txBody, signedTx).then(
 		(response: any) => {
 			return {
 				...response.sendPayment.payment,
@@ -53,15 +56,7 @@ export async function sendTransaction(transaction: Transaction): Promise<Transac
 				memo: response.sendPayment.payment.memoVerbatim ?? response.sendPayment.payment.memo,
 				dateTime: response.sendPayment.payment.memoVerbatim?.includes(',') ? new Date(response.sendPayment.payment.memoVerbatim.split(',')[0]).toString() : undefined,
 			};
-		},
-		(err: any) => {
-			const error = new Error(err.message);
-			(error as any).data = {
-				...signedTx,
-				dateTime: signedTx.memo?.includes(',') ? new Date(signedTx.memo.split(',')[0]).toString() : undefined,
-			};
-			return { error };
-		},
+		}
 	);
 }
 
