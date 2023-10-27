@@ -1,13 +1,14 @@
 import Client from 'mina-signer';
-import WALLETS from './wallets';
 import { makeGraphQLMutation, makeGraphQLQuery } from './gql-service';
-import { MempoolTx, Wallet, Transaction, BaseWallet } from './types';
+import { BaseWallet, MempoolTx, Transaction, Wallet } from './types';
 import readSetup from './setup';
 import Helper from './helper';
 
 let client: Client;
 
 export async function getAccounts(nodeName: string): Promise<Wallet[]> {
+	const setup = await readSetup();
+	const WALLETS = setup.wallets;
 	let query = '{';
 	WALLETS.forEach((wallet: BaseWallet, i: number) => query += `account${i}: account(publicKey: "${wallet.publicKey}") { nonce balance { liquid } }, `);
 	query += '}';
@@ -56,7 +57,7 @@ export async function sendTransaction(nodeName: string, transaction: Transaction
 				memo: response.sendPayment.payment.memoVerbatim ?? response.sendPayment.payment.memo,
 				dateTime: response.sendPayment.payment.memoVerbatim?.includes(',') ? new Date(response.sendPayment.payment.memoVerbatim.split(',')[0]).toString() : undefined,
 			};
-		}
+		},
 	);
 }
 

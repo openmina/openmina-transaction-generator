@@ -1,12 +1,12 @@
-import { MempoolTx, Setup, Wallet } from './types';
+import { MempoolTx, Wallet } from './types';
 
 class Helper {
-	static getRandomReceiver(currentWallet: Wallet, wallets: Wallet[]): string {
-		const index = Math.floor(Math.random() * wallets.length);
-		if (wallets[index].publicKey === currentWallet.publicKey) {
-			return this.getRandomReceiver(currentWallet, wallets);
+
+	static getNextReceiver(currentIndex: number, wallets: Wallet[]): string {
+		if (currentIndex === wallets.length - 1) {
+			return wallets[0].publicKey;
 		}
-		return wallets[index].publicKey;
+		return wallets[currentIndex + 1].publicKey;
 	}
 
 	static getNonceForWallet(wallet: Wallet, mempoolTxs: MempoolTx[]): number {

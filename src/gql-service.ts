@@ -50,6 +50,7 @@ async function makeGraphQLRequest(
 					resolve(response.data);
 				} else {
 					if (res.statusCode === 200) {
+						console.log(nodeName, variables);
 						console.error(chalk.red('❌  GraphQL request failed with error:', response.errors[0].message));
 					} else {
 						console.error(chalk.red('❌  GraphQL request failed with status code:', res.statusCode));

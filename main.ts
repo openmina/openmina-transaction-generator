@@ -4,82 +4,85 @@ import { getAccounts, getMempoolTransactions, sendTransaction } from './src/tx-s
 import Helper from './src/helper';
 import chalk, { Chalk } from 'chalk';
 import boxen, { BorderStyle } from 'boxen';
-import WALLETS from './src/wallets';
 
 async function run() {
 	console.log(chalk.blue('🚀 Running...\n'));
 
 	const setup: Setup = await readSetup();
 	console.log(chalk.green('⚙️ Configuration found\n'));
+	const WALLETS = setup.wallets;
 
 	let sentTxCount = 0;
 	let successTxCount = 0;
 	let failedTxCount = 0;
-	let txsToSend: { nodeName: string, tx: Transaction }[] = [];
-	let sendFromRandomWallet: boolean = true;
 
-	if (sendFromRandomWallet) {
-		console.log(chalk.green(`🛠 ️Preparing ${setup.transactionsToSend} transactions to send\n`));
-		for (let i = 0; i < WALLETS.slice(0, setup.transactionsToSend).length; i++) {
-			try {
-				const wallet = WALLETS[i];
-				sentTxCount++;
-				const currentNode = setup.allNodes[i % setup.allNodes.length];
-				const walletsFromCurrentNode = await getAccounts(currentNode);
-				const mempoolTxsFromCurrentNode = await getMempoolTransactions(currentNode);
-				const nonce = Helper.getNonceForWallet(walletsFromCurrentNode[i], mempoolTxsFromCurrentNode).toString();
-				const counter = sentTxCount + i;
-				const memo = `${Date.now()},${counter}`;
-				const tx: Transaction = {
-					from: wallet.publicKey,
-					nonce,
-					to: Helper.getRandomReceiver(walletsFromCurrentNode[i], walletsFromCurrentNode),
-					fee: setup.transactionFee.toString(),
-					amount: setup.transactionAmount.toString(),
-					memo,
-					validUntil: '4294967295',
-					privateKey: wallet.privateKey,
-				};
-
-				txsToSend.push({
-					nodeName: currentNode,
-					tx,
-				});
-			} catch (e: any) {
-				failedTxCount++;
-				console.log(chalk.red('❌  Error on preparing a transaction:', e.message));
-			}
-		}
-	}
-
-	console.log(chalk.green(`📤 Sending ${txsToSend.length} transactions\n`));
-	for (const { nodeName, tx } of txsToSend) {
+	console.log(chalk.green(`📤 Sending ${setup.transactionsToSend} transactions to send\n`));
+	for (let i = 0; i < WALLETS.slice(0, setup.transactionsToSend).length; i++) {
 		try {
-			await sendTransaction(nodeName, tx).then(async(response: any) => {
-				if (response.error) {
-					// if (response.error.message.includes('Insufficient_replace_fee')) {
-					// 	console.log('trying again');
-					// 	await sendTransaction(nodeName, { ...tx, fee: tx.fee + '0' }).then((response: any) => {
-					// 		console.log('conclusion');
-					// 		if (response.error) {
-					// 			console.log('failed');
-					// 			failedTxCount++;
-					// 		} else {
-					// 			console.log('success');
-					// 			successTxCount++;
-					// 		}
-					// 	});
-					// } else {
-						failedTxCount++;
-					// }
-				} else {
-					successTxCount++;
-				}
-			});
-		} catch (e) {
+			const wallet = WALLETS[i];
+			sentTxCount++;
+			const currentNode = setup.allNodes[i % setup.allNodes.length];
+			const walletsFromCurrentNode = await getAccounts(currentNode);
+			const mempoolTxsFromCurrentNode = await getMempoolTransactions(currentNode);
+			const nonce = Helper.getNonceForWallet(walletsFromCurrentNode[i], mempoolTxsFromCurrentNode).toString();
+			const counter = sentTxCount + i;
+			const memo = `${Date.now()},${counter}`;
+			const tx: Transaction = {
+				from: wallet.publicKey,
+				nonce,
+				to: Helper.getNextReceiver(i, walletsFromCurrentNode),
+				fee: (setup.transactionFee * 1000000000).toString(),
+				amount: (setup.transactionAmount * 1000000000).toString(),
+				memo,
+				validUntil: '4294967295',
+				privateKey: wallet.privateKey,
+			};
 
+			try {
+				await sendTransaction(currentNode, tx).then(async (response: any) => {
+					if (response.error) {
+						failedTxCount++;
+					} else {
+						successTxCount++;
+					}
+				});
+			} catch (e) {
+				failedTxCount++;
+			}
+		} catch (e: any) {
+			failedTxCount++;
+			console.log(chalk.red('❌  Error on preparing a transaction:', e.message));
 		}
 	}
+
+	/*
+		console.log(chalk.green(`📤 Sending ${txsToSend.length} transactions\n`));
+		for (const { nodeName, tx } of txsToSend) {
+			try {
+				await sendTransaction(nodeName, tx).then(async (response: any) => {
+					if (response.error) {
+						// if (response.error.message.includes('Insufficient_replace_fee')) {
+						// 	console.log('trying again');
+						// 	await sendTransaction(nodeName, { ...tx, fee: tx.fee + '0' }).then((response: any) => {
+						// 		console.log('conclusion');
+						// 		if (response.error) {
+						// 			console.log('failed');
+						// 			failedTxCount++;
+						// 		} else {
+						// 			console.log('success');
+						// 			successTxCount++;
+						// 		}
+						// 	});
+						// } else {
+						failedTxCount++;
+						// }
+					} else {
+						successTxCount++;
+					}
+				});
+			} catch (e) {
+				failedTxCount++;
+			}*/
 
 	const boxenOptions: boxen.Options = {
 		padding: 1,

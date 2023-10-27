@@ -1,13 +1,13 @@
 export interface Setup {
 	domain: string;
 	port: number | null | undefined;
-	activeNodeName: string; // ex: 'prod1'
 	network: 'testnet' | 'mainnet';
 	allNodes: string[];
-	sendToAllNodes: boolean; // if false, send to activeNodeName only, otherwise send to allNodes 1 by 1 until transactionsToSend is reached
+	sendToAllNodes: boolean; // right now this is true only. False is not implemented
 	transactionsToSend: number;
 	transactionAmount: number;
 	transactionFee: number;
+	wallets: BaseWallet[];
 }
 
 export interface BaseWallet {
