@@ -4,41 +4,76 @@
   "activeNodeName": "snarker020",
   "network": "testnet",
   "sendToRandomNodes": false,
-  "transactionsToSend": 200,
-  "transactionFee": 1000000000,
-  "transactionAmount": 2000000000,
+  "transactionsToSend": 64,
+  "transactionFee": 1000000,
+  "transactionAmount": 20000000,
   "allNodes": [
-    "prod1",
-    "prod10",
-    "prod2",
-    "prod3",
-    "prod4",
-    "prod5",
-    "prod6",
-    "prod7",
-    "prod8",
-    "prod9",
-    "seed1",
-    "seed2",
-    "snarker001",
-    "snarker002",
-    "snarker003",
-    "snarker004",
-    "snarker005",
-    "snarker006",
-    "snarker007",
-    "snarker008",
-    "snarker009",
-    "snarker010",
-    "snarker011",
-    "snarker012",
-    "snarker013",
-    "snarker014",
-    "snarker015",
-    "snarker016",
-    "snarker017",
-    "snarker018",
-    "snarker019",
-    "snarker020"
+    "node1"
+  ],
+  "wallets": [
+    {
+      "publicKey": "B62qn5TWynAMMnDJBj1yPRYjCA1145HUqFZUqsGG84WUwHp8tWtNXDS",
+      "privateKey": "EKF2gCphKUWLT2xxspqQSDLc4WGpmjubzMQjAprWctz4RRbfFra5"
+    },
+    {
+      "publicKey": "B62qmtxPyUqMiXqRKze5SPxceyiQWaCf1f29kJvgG4wK2AzyPLcT5eC",
+      "privateKey": "EKEo69RM5Ny1yM3z2ch4zx8hrQ481r67e3Did4avEiBWWFtkqcgY"
+    },
+    {
+      "publicKey": "B62qpFNUKPnTxHAZgiXLgpDYUWt8w1Buhndx6U7mL21Acr2iaNJcbFZ",
+      "privateKey": "EKEP7XzLjeYVSR2KEGj8bVqWJd5FmucZJ7SAosHzDcVR95wFdVaf"
+    },
+    {
+      "publicKey": "B62qmoNZVrN6Yi8N9dnt4T3hbVGVqMUzXAQghdf874d3r9YbBozE8Df",
+      "privateKey": "EKELLKgzDzheiQkQcJ2Jtbm4iGooYYpjXAUPtJXVs1b7CmX6U1b8"
+    },
+    {
+      "publicKey": "B62qoFXR1YvmRpd3xw4WuJDqtY47PNpdeQzTemopSXpBtG9zMcARfuk",
+      "privateKey": "EKDxKGwK7y5Cw7FjFn5d8EGiZppSZiWG3uYzEqpaDDFCS9NSkbqx"
+    },
+    {
+      "publicKey": "B62qoPCFFBGtHNTDTn33ut6xdKg9AsTPvdsHukrAJdNu3nSvNS5XkPW",
+      "privateKey": "EKEgvw79MLDDGtwYVkpvcRA9erfU2ggA4xB2iMhfTErjQPFaQFEt"
+    },
+    {
+      "publicKey": "B62qoPPAPbJSREmSHsuVkkgsjJc1NxuyheL5QBGcFZmC9y3quBpxpfZ",
+      "privateKey": "EKF7UKk2FK7AcHnf5YvXiYG565pC713Ln8YDJsyoyDK1wM9ppKDK"
+    },
+    {
+      "publicKey": "B62qro8vUushB3nLWnXxQwqM2ZAKUCmnovt9sfNS8ZLywm6BAR35ndH",
+      "privateKey": "EKEimo3GaDvf43R9ooKBvtk78QDtk8fHx6dSv5gMJVw5X8AApidD"
+    },
+    {
+      "publicKey": "B62qkii6M3ndrNiv6JcjFJQp3LD6o1AquVtXKDtQp9wTBFEp5KFhFAT",
+      "privateKey": "EKESF3M7H8HLXzA557TuufPd3gMw1d9dNaExYnxAtK5DHiNCUuhj"
+    },
+    {
+      "publicKey": "B62qksEEYKPjYoegQEVh2mSQxZSwFHUGYpAg8y6DHUCdkZcidv5TT31",
+      "privateKey": "EKE2w9n1ZpEZ8kiWjdL6iTQJiUTPHCBjRTVmjAoy1aEh8F5QvtuD"
+    },
+    {
+      "publicKey": "B62qq87GkLSL8pMH75WUcDeaQr6iy9YzNWbpDNcBec1qKtbQv7yfmu3",
+      "privateKey": "EKE3Qde1NXCuRv3MQEKiXUQUnu53GrpSg7bx4FyWPGW7V2h4sc7q"
+    },
+    {
+      "publicKey": "B62qjGyn2QdR24vPywWQUQNkeXnLe4y3A3Yr63bm4gxgepfwUmHLfkj",
+      "privateKey": "EKEGbjJ8ZKZadjgfiEaxmbbhXyZ7mmua6yhbFD1FjK9udW6RPVB6"
+    },
+    {
+      "publicKey": "B62qjfVSBW5A8EdWverTSPcfUeV4D2zkusr49tX517LYr6eMsP8g7k6",
+      "privateKey": "EKDhVdBTX3Ywi5gnZ5varFGSf6MNiLiGkjHYyNci4pHKniuCYh29"
+    },
+    {
+      "publicKey": "B62qojPZDofedbm6tAJtbxKTTAAhzmoghBQc4Y6LH2gMuZqHEKCh2zn",
+      "privateKey": "EKEtApvWXWP24tYdnnkrWEpiEXi8jM9EJ9oyoL38BR2h3Guo2u2U"
+    },
+    {
+      "publicKey": "B62qpxiNcrxUniraFdC4bZe9XXwLz6MaqXqPH6wQeQMK5LSpxsEpyxy",
+      "privateKey": "EKERdDHh6xnX2VBzNpRgMnpgXbxfxvsrRkCmGfa2VePjZwcyzNka"
+    },
+    {
+      "publicKey": "B62qp8iy2kUcn7hJgEaDPdrRXE4KQ59vz6shpUT4cmrhhKUDvvrkKZL",
+      "privateKey": "EKDq7AdisPoHNG3GSn34XHqKQDKhsszwygtmwbgjxzFHkd2aiGFQ"
+    }
   ]
 }
